@@ -15,6 +15,8 @@ ActiveRecord::Schema.define(version: 2022_06_25_054516) do
   create_table "accounts", force: :cascade do |t|
     t.float "balance"
     t.integer "phone"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "businesses", force: :cascade do |t|
@@ -25,22 +27,27 @@ ActiveRecord::Schema.define(version: 2022_06_25_054516) do
     t.string "business_name"
     t.string "image"
     t.string "description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "messages", force: :cascade do |t|
     t.string "text_massage"
-    t.string "sender"
-    t.string "receiver"
+    t.integer "sender"
+    t.integer "receiver"
     t.string "type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
     t.string "username"
     t.string "email"
     t.integer "phone"
     t.string "image"
     t.string "password"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

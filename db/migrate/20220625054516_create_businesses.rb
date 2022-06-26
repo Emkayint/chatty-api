@@ -8,6 +8,7 @@ class CreateBusinesses < ActiveRecord::Migration[6.1]
       t.string :business_name
       t.string :image
       t.string :description
+      t.timestamps
     end
   end
 end
