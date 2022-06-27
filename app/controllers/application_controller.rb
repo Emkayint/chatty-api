@@ -25,7 +25,7 @@ class ApplicationController < Sinatra::Base
       text_massage: params[:text_massage],
       sender: params[:sender],
       receiver: params[:receiver],
-      type: params[:type],
+      type: params[:type]
     )
     new_message.save
   end
@@ -42,6 +42,14 @@ class ApplicationController < Sinatra::Base
     )
     new_business.save
 
+  end
+
+  get "/messages/msg/?:currentuser/:activechat" do
+    msgs = Message.where(["sender= '%s' and receiver = '%s'", params[:currentuser], params[:activechat]]).or(
+      Message.where(["sender = '%s' and receiver = '%s'", params[:activechat], params[:currentuser]])
+    )
+
+    msgs.to_json
   end
 
 end
