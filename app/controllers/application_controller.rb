@@ -52,4 +52,8 @@ class ApplicationController < Sinatra::Base
     msgs.to_json
   end
 
+  get "/contacts/?" do
+
+  end
+
 end
