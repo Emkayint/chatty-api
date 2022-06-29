@@ -20,9 +20,22 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  def self.add_contact(attr)
+  def get_contacts(attr){
+    
+  }
 
-    new_contact = User.create(attr)
+  get "/contacts/:phone" do
+
+  end
+
+  def self.add_contact(attr)
+    if !self.check_if_user_exist?(attr)
+      new_contact = User.create(attr)
+      new_contact.save
+
+    else
+      {}
+    end
 
   end
 
