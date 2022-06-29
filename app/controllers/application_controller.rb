@@ -3,7 +3,7 @@ class ApplicationController < Sinatra::Base
   
   # Add your routes here
   def self.login(attr)
-    user = User.find_by(attr)
+    user = User.find_by(attr[:phone])
     if user.password == attr[:password]
       user
     else
@@ -12,8 +12,8 @@ class ApplicationController < Sinatra::Base
   end
 
   def check_if_user_exist?(attr)
-    user = User.find_by(attr)
-    if user.phone == attr[:phon]
+    user = User.find_by(attr[:phone])
+    if user.phone == attr[:phone]
       true
     else
       false
@@ -25,6 +25,9 @@ class ApplicationController < Sinatra::Base
     new_contact = User.create(attr)
 
   end
+
+
+  #login
   get "/login/?:phone/?:password" do
     # { message: "Good luck with your project!" }.to_json
     phones = self.login(phone: params[:phone], password: params[:password])
@@ -32,15 +35,20 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/users" do 
-    new_user = User.create(
-      # name: params[:name],
-      email: params[:email],
-      image: params[:image],
-      phone: params[:phone],
-      password: params[:password],
-      username: params[:username]
-    )
-    new_user.save
+    if self.check_if_user_exist? 
+      res = {respone: "User Exist"}
+    else
+      new_user = User.create(
+        # name: params[:name],
+        email: params[:email],
+        image: params[:image],
+        phone: params[:phone],
+        password: params[:password],
+        username: params[:username]
+      )
+      new_user.save
+      new_user.to_json
+    end
   end
 
   post "/messages" do 
