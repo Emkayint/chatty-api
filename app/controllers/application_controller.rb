@@ -2,9 +2,32 @@ class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
   
   # Add your routes here
-  get "/users/:phone" do
+  def self.login(attr)
+    user = User.find_by(attr)
+    if user.password == attr[:password]
+      user
+    else
+      {data: "Error login"}
+    end
+  end
+
+  def check_if_user_exist?(attr)
+    user = User.find_by(attr)
+    if user.phone == attr[:phon]
+      true
+    else
+      false
+    end
+  end
+
+  def self.add_contact(attr)
+
+    new_contact = User.create(attr)
+
+  end
+  get "/login/?:phone/?:password" do
     # { message: "Good luck with your project!" }.to_json
-    phones = User.find_by(phone: params[:phone])
+    phones = self.login(phone: params[:phone], password: params[:password])
     phones.to_json
   end
 
@@ -44,7 +67,7 @@ class ApplicationController < Sinatra::Base
 
   end
 
-  get "/messages/msg/?:currentuser/:activechat" do
+  get "/messages/msg/?:currentuser/?:activechat" do
     msgs = Message.where(["sender= '%s' and receiver = '%s'", params[:currentuser], params[:activechat]]).or(
       Message.where(["sender = '%s' and receiver = '%s'", params[:activechat], params[:currentuser]])
     )
