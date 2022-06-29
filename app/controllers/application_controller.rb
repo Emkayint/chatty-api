@@ -20,9 +20,8 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  def get_contacts(attr){
-    
-  }
+  def get_contacts(attr)
+  end
 
   get "/contacts/:phone" do
 
@@ -96,8 +95,8 @@ class ApplicationController < Sinatra::Base
     msgs.to_json
   end
 
-  get "/contacts/?" do
+  # get "/contacts/?" do
 
-  end
+  # end
 
 end

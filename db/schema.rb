@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 2022_06_28_180326) do
     t.string "text_massage"
     t.integer "sender"
     t.integer "receiver"
-    t.string "type"
+    t.string "typ"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
