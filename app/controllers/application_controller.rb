@@ -87,6 +87,20 @@ class ApplicationController < Sinatra::Base
     )
     new_message.save
 
+    if params[:type] == "transaction"
+      send_to = Account.find_by(phone: params[:receiver])
+      send_amount = send_to.balance
+
+      send_to.balance = send_amount + params.text_massage
+      send_to.save
+
+
+      send_from = Account.find_by(phone: params[:sender])
+      send_amount_to = send_from.balance
+      send_from.balance = send_amount_to + params[:text_massage]
+      send_from.save
+
+
     msgs = get_messages(currentuser: params[:sender], activechat: params[:receiver])
     msgs.to_json
   end
