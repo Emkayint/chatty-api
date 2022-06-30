@@ -3,14 +3,14 @@ class ApplicationController < Sinatra::Base
 
 
   def get_messages(attr)
-    Message.where(["sender= '%s' and receiver = '%s'", attr[:currentuser], attr[:activechat]]).or(
+    Message.where(["sender = '%s' and receiver = '%s'", attr[:currentuser], attr[:activechat]]).or(
       Message.where(["sender = '%s' and receiver = '%s'", attr[:activechat], attr[:currentuser]])
     )
   end
   
   # Add your routes here
-  def self.login(attr)
-    user = User.find_by(attr[:phone])
+  def login(attr)
+    user = User.where(["phone = '%s' and password = '%s'", attr[:phone], attr[:password]]).first
     if user.password == attr[:password]
       user
     else
@@ -31,7 +31,7 @@ class ApplicationController < Sinatra::Base
     contacts = Contact.where("sender = '%s'", attr[:phone])
 
     new_contact_details = contacts.map do |contact|
-      {name: contact.name, phone: contact.sender, last_message: self.get_messages(currentuser: contact.sender, activechat: contact.receiver).last}
+      {name: contact.name, phone: contact.receiver, last_message: self.get_messages(currentuser: contact.sender, activechat: contact.receiver).last}
     end
     new_contact_details.to_json
   end
@@ -55,14 +55,14 @@ class ApplicationController < Sinatra::Base
 
 
   #login
-  get "/login/?:phone/?:password" do
+  get "/login/:phone/:password" do
     # { message: "Good luck with your project!" }.to_json
     phones = self.login(phone: params[:phone], password: params[:password])
     phones.to_json
   end
 
   post "/users" do 
-    if self.check_if_user_exist? 
+    if self.check_if_user_exist?(phone: params[:phone]) 
       res = {respone: "User Exist"}
     else
       new_user = User.create(
@@ -83,9 +83,12 @@ class ApplicationController < Sinatra::Base
       text_massage: params[:text_massage],
       sender: params[:sender],
       receiver: params[:receiver],
-      type: params[:type]
+      typ: params[:type]
     )
     new_message.save
+
+    msgs = get_messages(currentuser: params[:sender], activechat: params[:receiver])
+    msgs.to_json
   end
 
   post "/businesses" do 
@@ -99,6 +102,8 @@ class ApplicationController < Sinatra::Base
       description: params[:description]
     )
     new_business.save
+
+    
 
   end
 
