@@ -16,4 +16,8 @@ Account.create(phone: 742, balance: 15600)
 Account.create(phone: 743, balance: 10600)
 Account.create(phone: 742075648, balance: 2900)
 
+Contact.create(sender: 742, receiver: 742075647, name: "Emkay")
+Contact.create(sender: 742, receiver: 743, name: "John")
+Contact.create(sender: 742, receiver: 742075648,  name:"Sam")
+
 puts "✅ Done seeding!"

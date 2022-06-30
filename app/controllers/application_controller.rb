@@ -1,5 +1,12 @@
 class ApplicationController < Sinatra::Base
   set :default_content_type, 'application/json'
+
+
+  def get_messages(attr)
+    Message.where(["sender= '%s' and receiver = '%s'", attr[:currentuser], attr[:activechat]]).or(
+      Message.where(["sender = '%s' and receiver = '%s'", attr[:activechat], attr[:currentuser]])
+    )
+  end
   
   # Add your routes here
   def self.login(attr)
@@ -21,9 +28,17 @@ class ApplicationController < Sinatra::Base
   end
 
   def get_contacts(attr)
+    contacts = Contact.where("sender = '%s'", attr[:phone])
+
+    new_contact_details = contacts.map do |contact|
+      {name: contact.name, phone: contact.sender, last_message: self.get_messages(currentuser: contact.sender, activechat: contact.receiver).last}
+    end
+    new_contact_details.to_json
   end
 
   get "/contacts/:phone" do
+
+    self.get_contacts(phone: params[:phone])
 
   end
 
@@ -87,11 +102,11 @@ class ApplicationController < Sinatra::Base
 
   end
 
-  get "/messages/msg/?:currentuser/?:activechat" do
-    msgs = Message.where(["sender= '%s' and receiver = '%s'", params[:currentuser], params[:activechat]]).or(
-      Message.where(["sender = '%s' and receiver = '%s'", params[:activechat], params[:currentuser]])
-    )
+  
 
+  get "/messages/?:currentuser/?:activechat" do
+    
+    msgs = self.get_messages(currentuser: params[:currentuser], activechat: params[:activechat])
     msgs.to_json
   end
 
